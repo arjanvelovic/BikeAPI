@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, User, user_schema, users_schema, Bikeconfig, bike_config_schema, bikes_config_schema, Usercart, usercart_schema, usercarts_schema, Userpayment, userpayment_schema, userpayments_schema, Usercc, usercc_schema, userccs_schema
+from models import db, User, user_schema, users_schema, Bikeconfig, bike_config_schema, bikes_config_schema, Usercart, usercart_schema, usercarts_schema, Userpayment, userpayment_schema, userpayments_schema
 
 from flask import request
 from models import db, Bikeconfig, User
@@ -8,25 +8,22 @@ from ..auth.routes import basic_auth
 api = Blueprint('api',__name__, url_prefix='/api')
 
 # Delete ALL DATA
-@api.route('/deletedata', methods = ['DELETE'])
-def delete_all():
-    users = User.query.all()
-    bikeconfigs = Bikeconfig.query.all()
-    carts = Usercart.query.all()
-    payments = Userpayment.query.all()
-    ccs = Usercc.query.all()
-    for user in users:
-        db.session.delete(user)
-    for bikeconfig in bikeconfigs:
-        db.session.delete(bikeconfig)
-    for cart in carts:
-        db.session.delete(cart)
-    for payment in payments:
-        db.session.delete(payment)
-    for cc in ccs:
-        db.session.delete(cc)
-    db.session.commit()
-    return jsonify('All data has been deleted')
+# @api.route('/deletedata', methods = ['DELETE'])
+# def delete_all():
+#     users = User.query.all()
+#     bikeconfigs = Bikeconfig.query.all()
+#     carts = Usercart.query.all()
+#     payments = Userpayment.query.all()
+#     for user in users:
+#         db.session.delete(user)
+#     for bikeconfig in bikeconfigs:
+#         db.session.delete(bikeconfig)
+#     for cart in carts:
+#         db.session.delete(cart)
+#     for payment in payments:
+#         db.session.delete(payment)
+#     db.session.commit()
+#     return jsonify('All data has been deleted')
 
 
 ##############################################################################
@@ -62,33 +59,33 @@ def create_user():
     return jsonify(response)
 
 # Create mock users
-@api.route('/mockusers', methods = ['POST'])
-def create_mock_users():
-    emails = ['test0@gmail.com', 'test1@gmail.com', 'test2@gmail.com']
-    for i in range(len(emails)):
-        isAdmin = False
-        first_name = i
-        last_name = i
-        email = emails[i]
-        password = 'gogoli12'
-        phone_number = i
-        address_street = i
-        address_city = i
-        address_state = i
-        address_zipcode = i
+# @api.route('/mockusers', methods = ['POST'])
+# def create_mock_users():
+#     emails = ['test0@gmail.com', 'test1@gmail.com', 'test2@gmail.com']
+#     for i in range(len(emails)):
+#         isAdmin = False
+#         first_name = i
+#         last_name = i
+#         email = emails[i]
+#         password = 'gogoli12'
+#         phone_number = i
+#         address_street = i
+#         address_city = i
+#         address_state = i
+#         address_zipcode = i
 
-        user = User(isAdmin, first_name, last_name, email, password, phone_number, address_street, address_city, address_state, address_zipcode)
-        db.session.add(user)
+#         user = User(isAdmin, first_name, last_name, email, password, phone_number, address_street, address_city, address_state, address_zipcode)
+#         db.session.add(user)
 
-    db.session.commit()
-    return jsonify('Mock users were added')
+#     db.session.commit()
+#     return jsonify('Mock users were added')
 
 # Get all users
-@api.route('/users', methods = ['GET'])
-def get_all_users():
-    users = User.query.all()
-    response = users_schema.dump(users)
-    return jsonify(response)
+# @api.route('/users', methods = ['GET'])
+# def get_all_users():
+#     users = User.query.all()
+#     response = users_schema.dump(users)
+#     return jsonify(response)
 
 #Get User Info
 @api.route('/user/<token>', methods = ['GET'])
@@ -124,21 +121,21 @@ def update_user_info(token):
     return response
 
 # Delete User
-@api.route('/user/<token>', methods = ['DELETE'])
-def delete_user(token):
-    auth_user = User.query.filter_by(token=token).first()
-    db.session.delete(auth_user)
-    db.session.commit()
-    return user_schema.jsonify(auth_user)
+# @api.route('/user/<token>', methods = ['DELETE'])
+# def delete_user(token):
+#     auth_user = User.query.filter_by(token=token).first()
+#     db.session.delete(auth_user)
+#     db.session.commit()
+#     return user_schema.jsonify(auth_user)
 
 # Delete All Users
-@api.route('/deleteusers', methods = ['DELETE'])
-def delete_all_users():
-    users = User.query.all()
-    for user in users:
-        db.session.delete(user)
-    db.session.commit()
-    return users_schema.jsonify(users)
+# @api.route('/deleteusers', methods = ['DELETE'])
+# def delete_all_users():
+#     users = User.query.all()
+#     for user in users:
+#         db.session.delete(user)
+#     db.session.commit()
+#     return users_schema.jsonify(users)
 
 #############################################################################
 
@@ -163,173 +160,173 @@ def create_bikeconfig():
     return jsonify(response)
 
 # Create All Bike Configs
-@api.route('/bikeconfigs', methods = ['POST'])
-def create_all_bikeconfigs():
+# @api.route('/bikeconfigs', methods = ['POST'])
+# def create_all_bikeconfigs():
 
-    allbikes = {
-        'make': 'Specialized',
-        'year': '2024',
-        'category':{
-            'Road': {
-                'Allez': {
-                    'colors' : ['Smoke', 'Lagoon Blue', 'Maroon'],
-                    'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
-                    'trims' : {
-                        '': 1200.00,
-                        'Elite': 1700.00,
-                        'Sport': 1800.00,
-                        'Sprint Comp': 3000.00,
-                        'Sprint LTD': 3500.00
-                    }
-                },
-                'Tarmac': {
-                    'colors' : ['Ghost Pearl', 'Black', 'Pine Green'],
-                    'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
-                    'trims' : {
-                        'SL6': 2500.00,
-                        'SL6 Sport': 3500.00,
-                        'SL7 Sport': 3800.00,
-                        'SL7 Expert': 6500.00,
-                        'SL8 Expert': 6500.00,
-                        'SL8 Pro': 8500.00
-                    }
-                },
-                'Roubaix': {
-                    'colors' : ['Smoke', 'UV Lilac', 'Doppio'],
-                    'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
-                    'trims' : {
-                        '': 2700.00,
-                        'SL8': 2800.00,
-                        'Sport': 3500.00,
-                        'SL8 Expert': 6500.00,
-                        'SL8 Pro': 8500.00
-                    }
-                },
-                'Diverge': {
-                    'colors' : ['Birch', 'Redwood', 'Midnight Shadow'],
-                    'sizes' : [48, 50, 52, 54, 56, 58, 60, 62],
-                    'trims' : {
-                        'E5': 1300.00,
-                        'Elite E5': 2000.00,
-                        'Comp E5': 2500.00,
-                        'Sport Carbon': 3000.00,
-                        'Comp Carbon': 4000.00
-                    }
-                },
-                'Crux': {
-                    'colors' : ['Gloss Vivid Pink', 'Satin Taupe'],
-                    'sizes' : [49, 52, 54, 56, 58, 61],
-                    'trims' : {
-                        'Comp': 4000.00,
-                        'Expert': 6200.00,
-                        'Pro': 8200.00,
-                    }
-                },
-            },
-            'Mountain': {
-                'Rockhopper': {
-                    'colors' : ['Tarmac Black', 'Flo Red', 'Cast Blue Metallic'],
-                    'sizes' : [50, 52, 54, 56, 58, 60],
-                    'trims' : {
-                        '29': 650.00,
-                        'Sport': 750.00,
-                        'Comp': 950.00,
-                        'Expert': 1300.00
-                    }
-                },
-                'Sumpjumper': {
-                    'colors' : ['Black', 'Blaze', 'White Sage'],
-                    'sizes' : [50, 52, 54, 56, 58, 60],
-                    'trims' : {
-                        'Alloy': 2800.00,
-                        'Comp': 5000.00,
-                        'EVO Expert': 6300.00,
-                        'EVO Pro': 8600.00,
-                        'S-Works': 11000.00
-                    }
-                },
-                'Demo': {
-                    'colors' : ['Desert Rose', 'Metallic Dark Navy'],
-                    'sizes' : [52, 54, 56, 58, 60],
-                    'trims' : {
-                        'Expert': 5600.00,
-                        'Race': 7100.00,
-                    }
-                },
-                'Epic': {
-                    'colors' : ['Birch', 'Redwood', 'Midnight Shadow'],
-                    'sizes' : [50, 52, 54, 56, 58, 62],
-                    'trims' : {
-                        'Hardtail': 2500.00,
-                        'Hardtail Comp': 3200.00,
-                        'Hardtail Expert': 4500.00,
-                        'Hardtail Pro': 5800.00,
-                        'Hardtail S-Works': 11000.00
-                    }
-                },
-                'Fuse': {
-                    'colors' : ['Doppio', 'Artic Blue', 'Cast Blue', 'Terra Cotta'],
-                    'sizes' : [49, 52, 54, 56, 58, 61],
-                    'trims' : {
-                        '27.5': 1500.00,
-                        'Sport 27.5': 2400.00,
-                        'Expert 29': 2900.00,
-                        'Comp 29': 3000.00,
-                    }
-                },
-            },
-            'Active': {
-                'Sirrus': {
-                    'colors' : ['Black', 'Cool Grey', 'Sky Blue', 'Fiery Red'],
-                    'sizes' : [50, 52, 54, 56, 58, 60],
-                    'trims' : {
-                        '1.0': 650.00,
-                        '2.0': 775.00,
-                        '3.0': 1200.00,
-                        '4.0': 1500.00,
-                        '6.0': 3000.00,
-                    }
-                },
-                'Roll': {
-                    'colors' : ['Lagoon Blue', 'Cool Grey', 'Tarmac Black', 'Redwood'],
-                    'sizes' : [52, 54, 56, 60],
-                    'trims' : {
-                        '2.0': 700.00,
-                        '2.0 Low Entry': 700.00,
-                        '3.0': 1100.00,
-                        '3.0 Low Entry': 1100.00
-                    }
-                },
-                'Turbo Vado': {
-                    'colors' : ['Cast Black', 'White Mountains', 'Red Tint'],
-                    'sizes' : [52, 54, 56, 60],
-                    'trims' : {
-                        '3.0': 3250.00,
-                        '4.0': 4000.00,
-                        '5.0': 5000.00,
-                    }
-                }
-            }
-        }
-    }
+#     allbikes = {
+#         'make': 'Specialized',
+#         'year': '2024',
+#         'category':{
+#             'Road': {
+#                 'Allez': {
+#                     'colors' : ['Smoke', 'Lagoon Blue', 'Maroon'],
+#                     'sizes' : [49, 52, 54, 56, 58, 61],
+#                     'trims' : {
+#                         'Base': 1200.00,
+#                         'Elite': 1700.00,
+#                         'Sport': 1800.00,
+#                         'Sprint Comp': 3000.00,
+#                         'Sprint LTD': 3500.00
+#                     }
+#                 },
+#                 'Tarmac': {
+#                     'colors' : ['Ghost Pearl', 'Black', 'Pine Green'],
+#                     'sizes' : [49, 52, 54, 56, 58, 61],
+#                     'trims' : {
+#                         'SL6': 2500.00,
+#                         'SL6 Sport': 3500.00,
+#                         'SL7 Sport': 3800.00,
+#                         'SL7 Expert': 6500.00,
+#                         'SL8 Expert': 6500.00,
+#                         'SL8 Pro': 8500.00
+#                     }
+#                 },
+#                 'Roubaix': {
+#                     'colors' : ['Smoke', 'UV Lilac', 'Doppio'],
+#                     'sizes' : [49, 52, 54, 56, 58, 61],
+#                     'trims' : {
+#                         'Base': 2700.00,
+#                         'SL8': 2800.00,
+#                         'Sport': 3500.00,
+#                         'SL8 Expert': 6500.00,
+#                         'SL8 Pro': 8500.00
+#                     }
+#                 },
+#                 'Diverge': {
+#                     'colors' : ['Birch', 'Redwood', 'Midnight Shadow'],
+#                     'sizes' : [49, 52, 54, 56, 58, 61],
+#                     'trims' : {
+#                         'E5': 1300.00,
+#                         'Elite E5': 2000.00,
+#                         'Comp E5': 2500.00,
+#                         'Sport Carbon': 3000.00,
+#                         'Comp Carbon': 4000.00
+#                     }
+#                 },
+#                 'Crux': {
+#                     'colors' : ['Gloss Vivid Pink', 'Satin Taupe'],
+#                     'sizes' : [49, 52, 54, 56, 58, 61],
+#                     'trims' : {
+#                         'Comp': 4000.00,
+#                         'Expert': 6200.00,
+#                         'Pro': 8200.00,
+#                     }
+#                 },
+#             },
+#             'Mountain': {
+#                 'Rockhopper': {
+#                     'colors' : ['Tarmac Black', 'Flo Red', 'Cast Blue Metallic'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         '29': 650.00,
+#                         'Sport': 750.00,
+#                         'Comp': 950.00,
+#                         'Expert': 1300.00
+#                     }
+#                 },
+#                 'Sumpjumper': {
+#                     'colors' : ['Black', 'Blaze', 'White Sage'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         'Alloy': 2800.00,
+#                         'Comp': 5000.00,
+#                         'EVO Expert': 6300.00,
+#                         'EVO Pro': 8600.00,
+#                         'S-Works': 11000.00
+#                     }
+#                 },
+#                 'Demo': {
+#                     'colors' : ['Desert Rose', 'Metallic Dark Navy'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         'Expert': 5600.00,
+#                         'Race': 7100.00,
+#                     }
+#                 },
+#                 'Epic': {
+#                     'colors' : ['Birch', 'Redwood', 'Midnight Shadow'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         'Hardtail': 2500.00,
+#                         'Hardtail Comp': 3200.00,
+#                         'Hardtail Expert': 4500.00,
+#                         'Hardtail Pro': 5800.00,
+#                         'Hardtail S-Works': 11000.00
+#                     }
+#                 },
+#                 'Fuse': {
+#                     'colors' : ['Doppio', 'Artic Blue', 'Cast Blue', 'Terra Cotta'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         '27.5': 1500.00,
+#                         'Sport 27.5': 2400.00,
+#                         'Expert 29': 2900.00,
+#                         'Comp 29': 3000.00,
+#                     }
+#                 },
+#             },
+#             'Active': {
+#                 'Sirrus': {
+#                     'colors' : ['Black', 'Cool Grey', 'Sky Blue', 'Fiery Red'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         '1.0': 650.00,
+#                         '2.0': 775.00,
+#                         '3.0': 1200.00,
+#                         '4.0': 1500.00,
+#                         '6.0': 3000.00,
+#                     }
+#                 },
+#                 'Roll': {
+#                     'colors' : ['Lagoon Blue', 'Cool Grey', 'Tarmac Black', 'Redwood'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         '2.0': 700.00,
+#                         '2.0 Low Entry': 700.00,
+#                         '3.0': 1100.00,
+#                         '3.0 Low Entry': 1100.00
+#                     }
+#                 },
+#                 'Turbo Vado': {
+#                     'colors' : ['Cast Black', 'White Mountains', 'Red Tint'],
+#                     'sizes' : ['XS', 'S', 'M', 'L', 'XL'],
+#                     'trims' : {
+#                         '3.0': 3250.00,
+#                         '4.0': 4000.00,
+#                         '5.0': 5000.00,
+#                     }
+#                 }
+#             }
+#         }
+#     }
 
-    make = allbikes['make']
-    year = allbikes['year']
+#     make = allbikes['make']
+#     year = allbikes['year']
 
-    for category in allbikes['category']:
-        for model in allbikes['category'][category]:
-            for color in allbikes['category'][category][model]['colors']:
-                for size in allbikes['category'][category][model]['sizes']:
-                    for trim in allbikes['category'][category][model]['trims']:
-                        cost = allbikes["category"][category][model]["trims"][trim]
+#     for category in allbikes['category']:
+#         for model in allbikes['category'][category]:
+#             for color in allbikes['category'][category][model]['colors']:
+#                 for size in allbikes['category'][category][model]['sizes']:
+#                     for trim in allbikes['category'][category][model]['trims']:
+#                         cost = allbikes["category"][category][model]["trims"][trim]
 
-                        bikeconfig = Bikeconfig(make, model, year, color, category, trim, size, cost)
-                        db.session.add(bikeconfig)
+#                         bikeconfig = Bikeconfig(make, model, year, color, category, trim, size, cost)
+#                         db.session.add(bikeconfig)
                                  
-    db.session.commit()                    
-    bikes = Bikeconfig.query.all()
-    response = bikes_config_schema.dump(bikes)
-    return jsonify(response)
+#     db.session.commit()                    
+#     bikes = Bikeconfig.query.all()
+#     response = bikes_config_schema.dump(bikes)
+#     return jsonify(response)
 
 # Get all Vehicle Configs
 @api.route('/bikeconfigs', methods = ['GET'])
@@ -345,13 +342,13 @@ def get_bikeconfig(id):
     return bike_config_schema.jsonify(bikeconfig)
 
 # Delete All Bike Config
-@api.route('/deletebikes', methods = ['DELETE'])
-def delete_all_bikeconfigs():
-    bikeconfigs = Bikeconfig.query.all()
-    for bikeconfig in bikeconfigs:
-        db.session.delete(bikeconfig)
-    db.session.commit()
-    return bikes_config_schema.jsonify(bikeconfigs)
+# @api.route('/deletebikes', methods = ['DELETE'])
+# def delete_all_bikeconfigs():
+#     bikeconfigs = Bikeconfig.query.all()
+#     for bikeconfig in bikeconfigs:
+#         db.session.delete(bikeconfig)
+#     db.session.commit()
+#     return bikes_config_schema.jsonify(bikeconfigs)
 
 
 #########################################################################
@@ -461,13 +458,13 @@ def clear_cart(token):
     return jsonify(f'User: {token} cart has been cleared')
 
 # Delete All Carts
-@api.route('/deletecarts', methods = ['DELETE'])
-def delete_carts():
-    carts = Usercart.query.all()
-    for cart in carts:
-        db.session.delete(cart)
-    db.session.commit()
-    return usercarts_schema.jsonify(carts)
+# @api.route('/deletecarts', methods = ['DELETE'])
+# def delete_carts():
+#     carts = Usercart.query.all()
+#     for cart in carts:
+#         db.session.delete(cart)
+#     db.session.commit()
+#     return usercarts_schema.jsonify(carts)
 
 #####################################################################################
 
@@ -503,79 +500,10 @@ def get_single_payment(id):
     return jsonify(response)
 
 # Delete all Payments
-@api.route('/deletepayments', methods = ['DELETE'])
-def delete_all_payments():
+# @api.route('/deletepayments', methods = ['DELETE'])
+# def delete_all_payments():
     payments = Userpayment.query.all()
     for payment in payments:
         db.session.delete(payment)
     db.session.commit()
     return userpayments_schema.jsonify(payments)
-
-####################################################################################
-
-# Save User Credit Card
-@api.route('/usercc/<token>', methods = ['POST'])
-def save_user_cc(token):
-    user_token = token
-    cc_num = request.json['cc_num']
-    cc_date = request.json['cc_date']
-    cc_code = request.json['cc_code']
-    cc_zip = request.json['cc_zip']
-    
-    usercc = Usercc(user_token, cc_num, cc_date, cc_code, cc_zip)
-    db.session.add(usercc)
-    db.session.commit()
-
-    response = usercc_schema.dump(usercc)
-    return jsonify(response)
-
-# Get User CCs
-@api.route('/userccs/<token>', methods = ['GET'])
-def get_user_ccs(token):
-    userccs = Usercc.query.filter_by(user_token=token).all()
-    response = userccs_schema.dump(userccs)
-    return jsonify(response)
-
-# Get Single User CC
-@api.route('/usercc/<id>', methods = ['GET'])
-def get_single_cc(id):
-    usercc = Usercc.query.filter_by(id=id).first()
-    response = usercc_schema.dump(usercc)
-    return jsonify(response)
-
-# Delete Single User CC
-@api.route('/usercc/<id>', methods = ['DELETE'])
-def delete_single_payment(id):
-    usercc = Usercc.query.filter_by(id=id).first()
-    db.session.delete(usercc)
-    db.session.commit()
-    response = usercc_schema.dump(usercc)
-    return jsonify(response)
-
-#Update User CC info
-@api.route('/usercc/<id>', methods = ['PUT'])
-def update_cc_info(id):
-    usercc = Usercc.query.filter_by(id=id).first()
-    cc_num = request.json['cc_num']
-    cc_date = request.json['cc_date']
-    cc_code = request.json['cc_code']
-    cc_zip = request.json['cc_zip']
-
-    usercc.cc_num = cc_num
-    usercc.cc_date = cc_date
-    usercc.cc_code = cc_code
-    usercc.cc_zip = cc_zip
-
-    db.session.commit()
-
-    response = usercc_schema.jsonify(usercc)
-    return response
-
-# Delete all CreditCards
-@api.route('/deleteccs', methods = ['DELETE'])
-def delete_ccs():
-    ccs = Usercc.query.all()
-    for cc in ccs:
-        db.session.delete(cc)
-    db.session.commit()
-    return userccs_schema.jsonify(ccs)

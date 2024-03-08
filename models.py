@@ -34,7 +34,6 @@ class User(db.Model):
     address_zipcode = db.Column(db.String(9), nullable = True)
     date_created = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
     cart = db.relationship('Usercart', backref='user', lazy=True)
-    cc = db.relationship('Usercc', backref='user', lazy=True)
     payment = db.relationship('Userpayment', backref='user', lazy=True)
 
     def __init__(self, isAdmin, first_name, last_name, email, password, phone_number, address_street, address_city, address_state, address_zipcode):
@@ -83,8 +82,8 @@ class Bikeconfig(db.Model):
     color = db.Column(db.String(30), nullable = False)
     trim = db.Column(db.String(30), nullable = True, default = '')
     category = db.Column(db.String(30), nullable = True, default = '')
-    size = db.Column(db.Integer, nullable = False)
-    cost = db.Column(db.Numeric(precision=6, scale=2), nullable = False)
+    size = db.Column(db.String(3), nullable = False)
+    cost = db.Column(db.Numeric(precision=10, scale=2), nullable = False)
     carted = db.relationship('Usercart', backref='bikeconfig', lazy=True)
 
     def __init__(self, make, model, year, color, category, trim, size, cost):
@@ -113,7 +112,7 @@ class Usercart(db.Model):
     user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
     bike_id = db.Column(db.String, db.ForeignKey('bikeconfig.id'), nullable = False)
     quantity = db.Column(db.Integer, nullable = True, default = 1)
-    itemtotal = db.Column(db.Numeric(10,2), nullable = True)
+    itemtotal = db.Column(db.Numeric(20,2), nullable = True)
       
     def __init__(self, user_token, bike_id, quantity, itemtotal ):
         self.id = self.set_id()
@@ -132,41 +131,15 @@ class UsercartShema(ma.Schema):
 usercart_schema = UsercartShema()
 usercarts_schema = UsercartShema(many=True)
 
-class Usercc(db.Model):
-    id = db.Column(db.String, primary_key = True)
-    user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
-    cc_num = db.Column(db.String(20), nullable = False, unique = True)
-    cc_date = db.Column(db.String(10), nullable = False)
-    cc_code = db.Column(db.String(5), nullable = False)
-    cc_zip = db.Column(db.String(9), nullable = False)
-      
-    def __init__(self, user_token, cc_num, cc_date, cc_code, cc_zip):
-        self.id = self.set_id()
-        self.user_token = user_token
-        self.cc_num = cc_num
-        self.cc_date = cc_date
-        self.cc_code = cc_code
-        self.cc_zip = cc_zip
-        
-    def set_id(self):
-        return str(uuid.uuid4())
-
-class UserccShema(ma.Schema):
-    class Meta:
-        fields = ['id', 'user_token', 'cc_num', 'cc_date', 'cc_code', 'cc_zip']
-
-usercc_schema = UserccShema()
-userccs_schema = UserccShema(many=True)
-
 
 class Userpayment(db.Model):
     id = db.Column(db.String, primary_key = True)
     user_token = db.Column(db.String, db.ForeignKey('user.token'), nullable = False)
     items = db.Column(db.PickleType, nullable=False)
     delivery_details = db.Column(db.PickleType, nullable=False)
-    subtotal = db.Column(db.Numeric(10,2), nullable = False)
-    tax = db.Column(db.Numeric(10,2), nullable = False)
-    total = db.Column(db.Numeric(10,2), nullable = False)
+    subtotal = db.Column(db.Numeric(20,2), nullable = False)
+    tax = db.Column(db.Numeric(20,2), nullable = False)
+    total = db.Column(db.Numeric(20,2), nullable = False)
     date_placed = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
       
     def __init__(self, user_token, items, delivery_details, subtotal, tax, total):
